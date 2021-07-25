@@ -1,4 +1,4 @@
-module github.com/paulebose/gochat/backend
+module github.com/paulebose/gochat
 
 go 1.16
 
