@@ -20,8 +20,8 @@ func NewPool() *Pool {
 	}
 }
 
-// Start continually listens for messages passed in any of
-// the Pool channels and act accordingly.
+// Start continually listens for messages passed in through
+// any of the Pool channels and act accordingly.
 func (pool *Pool) Start() {
 	for {
 		select {
@@ -29,17 +29,16 @@ func (pool *Pool) Start() {
 			pool.clients[client] = true
 			fmt.Println("Size of Connection Pool:", len(pool.clients))
 			for c := range pool.clients {
-				c.Conn.WriteJSON(Message{Type: 1, Body: "New User Joined!"})
+				c.Conn.WriteJSON(Message{Type: 1, Body: "New User Joined!", UserID: client.ID})
 			}
 		case client := <-pool.Unregister:
 			delete(pool.clients, client)
 			fmt.Println("Size of Connection Pool:", len(pool.clients))
 			for c := range pool.clients {
-				c.Conn.WriteJSON(Message{Type: 1, Body: "User Disconnected!"})
+				c.Conn.WriteJSON(Message{Type: 1, Body: "User Disconnected!", UserID: client.ID})
 			}
 
 		case msg := <-pool.Broadcast:
-			fmt.Println("Broadcasting to all clients in Connection Pool!")
 			for c := range pool.clients {
 				c.Conn.WriteJSON(msg)
 			}

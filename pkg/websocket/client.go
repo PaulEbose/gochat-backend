@@ -1,7 +1,6 @@
 package websocket
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/gorilla/websocket"
@@ -14,8 +13,9 @@ type Client struct {
 }
 
 type Message struct {
-	Type int    `json:"type"`
-	Body string `json:"body"`
+	Type   int    `json:"type"`
+	Body   string `json:"body"`
+	UserID string `json:"userId"`
 }
 
 // Read indefinitely listens for new messages
@@ -33,10 +33,10 @@ func (client *Client) Read() {
 			return
 		}
 		message := Message{
-			Type: messageType,
-			Body: string(data),
+			Type:   messageType,
+			Body:   string(data),
+			UserID: client.ID,
 		}
 		client.Pool.Broadcast <- message
-		fmt.Printf("Message Received: %+v\n", message)
 	}
 }

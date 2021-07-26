@@ -3,7 +3,9 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"strings"
 
+	"github.com/google/uuid"
 	"github.com/paulebose/gochat/pkg/websocket"
 )
 
@@ -16,6 +18,7 @@ func serveWs(pool *websocket.Pool, w http.ResponseWriter, r *http.Request) {
 	}
 
 	client := websocket.Client{
+		ID:   strings.Replace(uuid.New().String(), "-", "", -1),
 		Conn: conn,
 		Pool: pool,
 	}
